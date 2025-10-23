@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Pessoa Jurídica - Sistema de Gestão Universitária</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🎓 Sistema de Gestão Universitária</h1>
+            <div class="user-info">
+                <span>Administrador</span>
+                <button class="btn-secondary">Sair</button>
+            </div>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="container">
+            <a href="index.html">Dashboard</a>
+            <a href="pessoa-fisica.html">Pessoa Física</a>
+            <a href="pessoa-juridica.html" class="active">Pessoa Jurídica</a>
+            <a href="professor.html">Professor</a>
+            <a href="fornecedor.html">Fornecedor</a>
+            <a href="aluno.html">Aluno</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="form-section">
+            <h2>Cadastrar Pessoa Jurídica</h2>
+            <p class="description">Preencha os dados abaixo para registrar uma nova empresa ou organização no sistema.</p>
+
+            <div id="messages"></div>
+
+            <form id="formPessoaJuridica">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="razaoSocial" class="required">Razão Social</label>
+                        <input 
+                            type="text" 
+                            id="razaoSocial" 
+                            name="razaoSocial" 
+                            placeholder="Digite a razão social"
+                            required
+                            minlength="3"
+                        >
+                        <small>Nome oficial registrado da empresa</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nomeFantasia">Nome Fantasia</label>
+                        <input 
+                            type="text" 
+                            id="nomeFantasia" 
+                            name="nomeFantasia" 
+                            placeholder="Digite o nome fantasia"
+                        >
+                        <small>Nome comercial da empresa (opcional)</small>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="cnpj" class="required">CNPJ</label>
+                        <input 
+                            type="text" 
+                            id="cnpj" 
+                            name="cnpj" 
+                            placeholder="00.000.000/0000-00"
+                            maxlength="18"
+                            required
+                        >
+                        <small>Formato: 00.000.000/0000-00</small>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email" class="required">E-mail</label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            placeholder="contato@empresa.com"
+                            required
+                        >
+                        <small>E-mail corporativo da empresa</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefone" class="required">Telefone</label>
+                        <input 
+                            type="tel" 
+                            id="telefone" 
+                            name="telefone" 
+                            placeholder="(00) 0000-0000"
+                            maxlength="14"
+                            required
+                        >
+                        <small>Formato: (00) 0000-0000</small>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a href="index.html" class="btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn-primary">Cadastrar Pessoa Jurídica</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="info-box">
+            <strong>ℹ️ Informações importantes:</strong>
+            <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                <li>Todos os campos marcados com * são obrigatórios</li>
+                <li>O CNPJ será validado automaticamente</li>
+                <li>Nome Fantasia é opcional, mas recomendado</li>
+                <li>Um ID único será gerado após o cadastro bem-sucedido</li>
+            </ul>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Sistema de Gestão Universitária - Grupo 48 | Senac Projeto Integrador</p>
+        </div>
+    </footer>
+
+    <script src="scripts.js"></script>
+    <script>
+        // Máscara para CNPJ
+        document.getElementById('cnpj').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length <= 14) {
+                value = value.replace(/(\d{2})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d)/, '$1/$2');
+                value = value.replace(/(\d{4})(\d{1,2})$/, '$1-$2');
+                e.target.value = value;
+            }
+        });
+
+        // Máscara para Telefone
+        document.getElementById('telefone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length <= 10) {
+                value = value.replace(/(\d{2})(\d)/, '($1) $2');
+                value = value.replace(/(\d{4})(\d)/, '$1-$2');
+                e.target.value = value;
+            }
+        });
+
+        // Validação do formulário
+        document.getElementById('formPessoaJuridica').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const cnpj = document.getElementById('cnpj').value.replace(/\D/g, '');
+            
+            // Validação simples de CNPJ
+            if (cnpj.length !== 14) {
+                showMessage('CNPJ inválido. Digite um CNPJ com 14 dígitos.', 'error');
+                return;
+            }
+
+            // Validar campos obrigatórios
+            const razaoSocial = document.getElementById('razaoSocial').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const telefone = document.getElementById('telefone').value.trim();
+
+            if (!razaoSocial || !email || !telefone) {
+                showMessage('Por favor, preencha todos os campos obrigatórios.', 'error');
+                return;
+            }
+
+            // Simular sucesso
+            const id = 'PJ' + Math.floor(Math.random() * 10000).toString().padStart(5, '0');
+            showMessage(`Pessoa jurídica cadastrada com sucesso! ID: ${id}`, 'success');
+            
+            // Limpar formulário após 2 segundos
+            setTimeout(() => {
+                document.getElementById('formPessoaJuridica').reset();
+                document.getElementById('messages').innerHTML = '';
+            }, 3000);
+        });
+
+        function showMessage(message, type) {
+            const messagesDiv = document.getElementById('messages');
+            const className = type === 'success' ? 'success-message' : 'error-message';
+            messagesDiv.innerHTML = `<div class="${className}">${message}</div>`;
+            messagesDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

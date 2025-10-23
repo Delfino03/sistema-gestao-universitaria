@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Aluno - Sistema de Gestão Universitária</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🎓 Sistema de Gestão Universitária</h1>
+            <div class="user-info">
+                <span>Administrador</span>
+                <button class="btn-secondary">Sair</button>
+            </div>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="container">
+            <a href="index.html">Dashboard</a>
+            <a href="pessoa-fisica.html">Pessoa Física</a>
+            <a href="pessoa-juridica.html">Pessoa Jurídica</a>
+            <a href="professor.html">Professor</a>
+            <a href="fornecedor.html">Fornecedor</a>
+            <a href="aluno.html" class="active">Aluno</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Seção de Busca -->
+        <div class="search-section">
+            <h2>Buscar Pessoa Física</h2>
+            <p class="description">Primeiro, localize a pessoa física que será vinculada como aluno.</p>
+
+            <div class="search-box">
+                <div class="form-group">
+                    <label for="cpfBusca">CPF ou ID da Pessoa Física</label>
+                    <input 
+                        type="text" 
+                        id="cpfBusca" 
+                        placeholder="Digite o CPF ou ID"
+                    >
+                </div>
+                <button type="button" class="btn-primary" onclick="buscarPessoa()">Buscar</button>
+            </div>
+
+            <div id="resultadoBusca"></div>
+        </div>
+
+        <!-- Formulário de Aluno (inicialmente oculto) -->
+        <div id="formularioAluno" class="form-section" style="display: none;">
+            <h2>Dados Acadêmicos do Aluno</h2>
+            <p class="description">Preencha as informações acadêmicas para o cadastro do aluno.</p>
+
+            <div id="messages"></div>
+
+            <!-- Dados da Pessoa Física (somente leitura) -->
+            <div class="info-box">
+                <strong>Pessoa Física Selecionada:</strong>
+                <p id="dadosPessoa" style="margin-top: 0.5rem;"></p>
+            </div>
+
+            <form id="formAluno">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="curso" class="required">Curso</label>
+                        <select id="curso" name="curso" required>
+                            <option value="">Selecione o curso</option>
+                            <option value="Análise e Desenvolvimento de Sistemas">Análise e Desenvolvimento de Sistemas</option>
+                            <option value="Ciência da Computação">Ciência da Computação</option>
+                            <option value="Engenharia de Software">Engenharia de Software</option>
+                            <option value="Sistemas de Informação">Sistemas de Informação</option>
+                            <option value="Administração">Administração</option>
+                            <option value="Ciências Contábeis">Ciências Contábeis</option>
+                            <option value="Direito">Direito</option>
+                            <option value="Enfermagem">Enfermagem</option>
+                            <option value="Engenharia Civil">Engenharia Civil</option>
+                            <option value="Pedagogia">Pedagogia</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="turno" class="required">Turno</label>
+                        <select id="turno" name="turno" required>
+                            <option value="">Selecione o turno</option>
+                            <option value="Matutino">Matutino</option>
+                            <option value="Vespertino">Vespertino</option>
+                            <option value="Noturno">Noturno</option>
+                            <option value="Integral">Integral</option>
+                            <option value="EAD">EAD</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="dataIngresso" class="required">Data de Ingresso</label>
+                        <input 
+                            type="date" 
+                            id="dataIngresso" 
+                            name="dataIngresso"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="formaIngresso" class="required">Forma de Ingresso</label>
+                        <select id="formaIngresso" name="formaIngresso" required>
+                            <option value="">Selecione a forma de ingresso</option>
+                            <option value="Vestibular">Vestibular</option>
+                            <option value="ENEM">ENEM</option>
+                            <option value="Transferência Externa">Transferência Externa</option>
+                            <option value="Transferência Interna">Transferência Interna</option>
+                            <option value="Processo Seletivo">Processo Seletivo</option>
+                            <option value="Reopção de Curso">Reopção de Curso</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="status" class="required">Status</label>
+                    <select id="status" name="status" required>
+                        <option value="">Selecione o status</option>
+                        <option value="Ativo">Ativo</option>
+                        <option value="Trancado">Trancado</option>
+                        <option value="Inativo">Inativo</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="cancelarCadastro()">Cancelar</button>
+                    <button type="submit" class="btn-primary">Cadastrar Aluno</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Sistema de Gestão Universitária - Grupo 48 | Senac Projeto Integrador</p>
+        </div>
+    </footer>
+
+    <script src="scripts.js"></script>
+    <script>
+        let pessoaFisicaSelecionada = null;
+
+        function buscarPessoa() {
+            const cpfBusca = document.getElementById('cpfBusca').value.trim();
+            const resultadoDiv = document.getElementById('resultadoBusca');
+
+            if (!cpfBusca) {
+                resultadoDiv.innerHTML = '<div class="error-message">Por favor, digite um CPF ou ID para buscar.</div>';
+                return;
+            }
+
+            // Simular busca (80% de chance de encontrar)
+            if (Math.random() < 0.8) {
+                pessoaFisicaSelecionada = {
+                    id: 'PF' + Math.floor(Math.random() * 10000).toString().padStart(5, '0'),
+                    nome: 'Maria Oliveira Santos',
+                    cpf: '987.654.321-00',
+                    email: 'maria.oliveira@email.com',
+                    telefone: '(81) 99876-5432'
+                };
+
+                resultadoDiv.innerHTML = `
+                    <div class="result-card">
+                        <h4>✅ Pessoa Física Encontrada</h4>
+                        <p><strong>ID:</strong> ${pessoaFisicaSelecionada.id}</p>
+                        <p><strong>Nome:</strong> ${pessoaFisicaSelecionada.nome}</p>
+                        <p><strong>CPF:</strong> ${pessoaFisicaSelecionada.cpf}</p>
+                        <p><strong>E-mail:</strong> ${pessoaFisicaSelecionada.email}</p>
+                        <p><strong>Telefone:</strong> ${pessoaFisicaSelecionada.telefone}</p>
+                        <button class="btn-success" style="margin-top: 1rem;" onclick="vincularAluno()">
+                            Vincular como Aluno
+                        </button>
+                    </div>
+                `;
+            } else {
+                resultadoDiv.innerHTML = `
+                    <div class="error-message">
+                        Pessoa física não encontrada. 
+                        <a href="pessoa-fisica.html" style="color: inherit; text-decoration: underline;">
+                            Clique aqui para cadastrar
+                        </a>
+                    </div>
+                `;
+            }
+        }
+
+        function vincularAluno() {
+            // Mostrar formulário
+            document.getElementById('formularioAluno').style.display = 'block';
+            document.getElementById('dadosPessoa').innerHTML = `
+                <strong>${pessoaFisicaSelecionada.nome}</strong> - 
+                CPF: ${pessoaFisicaSelecionada.cpf} - 
+                ID: ${pessoaFisicaSelecionada.id}
+            `;
+            
+            // Scroll suave para o formulário
+            document.getElementById('formularioAluno').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function cancelarCadastro() {
+            document.getElementById('formularioAluno').style.display = 'none';
+            document.getElementById('formAluno').reset();
+            document.getElementById('messages').innerHTML = '';
+            pessoaFisicaSelecionada = null;
+        }
+
+        // Validação do formulário
+        document.getElementById('formAluno').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (!pessoaFisicaSelecionada) {
+                showMessage('Erro: Nenhuma pessoa física selecionada.', 'error');
+                return;
+            }
+
+            const curso = document.getElementById('curso').value;
+
+            // Simular curso indisponível (15% de chance)
+            if (Math.random() < 0.15) {
+                showMessage(
+                    `O curso "${curso}" está temporariamente indisponível para matrícula. Por favor, selecione outro curso.`, 
+                    'error'
+                );
+                return;
+            }
+
+            // Gerar matrícula acadêmica
+            const anoAtual = new Date().getFullYear();
+            const matricula = anoAtual + '' + Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+            
+            showMessage(`Aluno cadastrado com sucesso! Matrícula: ${matricula}`, 'success');
+            
+            // Limpar após 3 segundos
+            setTimeout(() => {
+                cancelarCadastro();
+                document.getElementById('resultadoBusca').innerHTML = '';
+                document.getElementById('cpfBusca').value = '';
+            }, 3000);
+        });
+
+        function showMessage(message, type) {
+            const messagesDiv = document.getElementById('messages');
+            const className = type === 'success' ? 'success-message' : 'error-message';
+            messagesDiv.innerHTML = `<div class="${className}">${message}</div>`;
+            messagesDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

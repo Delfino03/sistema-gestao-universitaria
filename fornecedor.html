@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Fornecedor - Sistema de Gestão Universitária</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🎓 Sistema de Gestão Universitária</h1>
+            <div class="user-info">
+                <span>Administrador</span>
+                <button class="btn-secondary">Sair</button>
+            </div>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="container">
+            <a href="index.html">Dashboard</a>
+            <a href="pessoa-fisica.html">Pessoa Física</a>
+            <a href="pessoa-juridica.html">Pessoa Jurídica</a>
+            <a href="professor.html">Professor</a>
+            <a href="fornecedor.html" class="active">Fornecedor</a>
+            <a href="aluno.html">Aluno</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Seção de Busca -->
+        <div class="search-section">
+            <h2>Buscar Pessoa Jurídica</h2>
+            <p class="description">Primeiro, localize a pessoa jurídica que será vinculada como fornecedor.</p>
+
+            <div class="search-box">
+                <div class="form-group">
+                    <label for="cnpjBusca">CNPJ ou ID da Pessoa Jurídica</label>
+                    <input 
+                        type="text" 
+                        id="cnpjBusca" 
+                        placeholder="Digite o CNPJ ou ID"
+                    >
+                </div>
+                <button type="button" class="btn-primary" onclick="buscarEmpresa()">Buscar</button>
+            </div>
+
+            <div id="resultadoBusca"></div>
+        </div>
+
+        <!-- Formulário de Fornecedor (inicialmente oculto) -->
+        <div id="formularioFornecedor" class="form-section" style="display: none;">
+            <h2>Dados do Fornecedor</h2>
+            <p class="description">Preencha as informações complementares para o cadastro do fornecedor.</p>
+
+            <div id="messages"></div>
+
+            <!-- Dados da Pessoa Jurídica (somente leitura) -->
+            <div class="info-box">
+                <strong>Pessoa Jurídica Selecionada:</strong>
+                <p id="dadosEmpresa" style="margin-top: 0.5rem;"></p>
+            </div>
+
+            <form id="formFornecedor">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ramo" class="required">Ramo de Atividade</label>
+                        <select id="ramo" name="ramo" required>
+                            <option value="">Selecione o ramo</option>
+                            <option value="Tecnologia">Tecnologia e TI</option>
+                            <option value="Papelaria">Papelaria e Material de Escritório</option>
+                            <option value="Alimentacao">Alimentação</option>
+                            <option value="Limpeza">Limpeza e Higiene</option>
+                            <option value="Construcao">Construção e Manutenção</option>
+                            <option value="Moveis">Móveis e Equipamentos</option>
+                            <option value="Servicos">Serviços Diversos</option>
+                            <option value="Educacao">Material Educacional</option>
+                            <option value="Laboratorio">Equipamentos de Laboratório</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="representante" class="required">Representante Legal</label>
+                        <input 
+                            type="text" 
+                            id="representante" 
+                            name="representante" 
+                            placeholder="Nome do representante"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="produtos" class="required">Produtos/Serviços Oferecidos</label>
+                    <textarea 
+                        id="produtos" 
+                        name="produtos" 
+                        placeholder="Descreva os principais produtos ou serviços oferecidos"
+                        required
+                    ></textarea>
+                    <small>Liste os principais produtos ou serviços fornecidos</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="condicoes" class="required">Condições de Pagamento</label>
+                    <select id="condicoes" name="condicoes" required>
+                        <option value="">Selecione as condições</option>
+                        <option value="A vista">À vista</option>
+                        <option value="15 dias">15 dias</option>
+                        <option value="30 dias">30 dias</option>
+                        <option value="30/60 dias">30/60 dias</option>
+                        <option value="30/60/90 dias">30/60/90 dias</option>
+                        <option value="45 dias">45 dias</option>
+                        <option value="60 dias">60 dias</option>
+                        <option value="Personalizado">Personalizado</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="cancelarCadastro()">Cancelar</button>
+                    <button type="submit" class="btn-primary">Cadastrar Fornecedor</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Sistema de Gestão Universitária - Grupo 48 | Senac Projeto Integrador</p>
+        </div>
+    </footer>
+
+    <script src="scripts.js"></script>
+    <script>
+        let pessoaJuridicaSelecionada = null;
+
+        function buscarEmpresa() {
+            const cnpjBusca = document.getElementById('cnpjBusca').value.trim();
+            const resultadoDiv = document.getElementById('resultadoBusca');
+
+            if (!cnpjBusca) {
+                resultadoDiv.innerHTML = '<div class="error-message">Por favor, digite um CNPJ ou ID para buscar.</div>';
+                return;
+            }
+
+            // Simular busca (80% de chance de encontrar)
+            if (Math.random() < 0.8) {
+                pessoaJuridicaSelecionada = {
+                    id: 'PJ' + Math.floor(Math.random() * 10000).toString().padStart(5, '0'),
+                    razaoSocial: 'ACME Tecnologia e Sistemas LTDA',
+                    nomeFantasia: 'ACME Tech',
+                    cnpj: '12.345.678/0001-90',
+                    email: 'contato@acmetech.com',
+                    telefone: '(81) 3333-4444'
+                };
+
+                resultadoDiv.innerHTML = `
+                    <div class="result-card">
+                        <h4>✅ Pessoa Jurídica Encontrada</h4>
+                        <p><strong>ID:</strong> ${pessoaJuridicaSelecionada.id}</p>
+                        <p><strong>Razão Social:</strong> ${pessoaJuridicaSelecionada.razaoSocial}</p>
+                        <p><strong>Nome Fantasia:</strong> ${pessoaJuridicaSelecionada.nomeFantasia || 'Não informado'}</p>
+                        <p><strong>CNPJ:</strong> ${pessoaJuridicaSelecionada.cnpj}</p>
+                        <p><strong>E-mail:</strong> ${pessoaJuridicaSelecionada.email}</p>
+                        <p><strong>Telefone:</strong> ${pessoaJuridicaSelecionada.telefone}</p>
+                        <button class="btn-success" style="margin-top: 1rem;" onclick="vincularFornecedor()">
+                            Vincular como Fornecedor
+                        </button>
+                    </div>
+                `;
+            } else {
+                resultadoDiv.innerHTML = `
+                    <div class="error-message">
+                        Pessoa jurídica não encontrada. 
+                        <a href="pessoa-juridica.html" style="color: inherit; text-decoration: underline;">
+                            Clique aqui para cadastrar
+                        </a>
+                    </div>
+                `;
+            }
+        }
+
+        function vincularFornecedor() {
+            // Verificar se já é fornecedor (20% de chance)
+            if (Math.random() < 0.2) {
+                const resultadoDiv = document.getElementById('resultadoBusca');
+                resultadoDiv.innerHTML = `
+                    <div class="error-message">
+                        Esta pessoa jurídica já possui vínculo de fornecedor.
+                        <div style="margin-top: 1rem;">
+                            <button class="btn-secondary" onclick="visualizarFornecedor()">Visualizar</button>
+                            <button class="btn-primary" onclick="atualizarFornecedor()">Atualizar Dados</button>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Mostrar formulário
+            document.getElementById('formularioFornecedor').style.display = 'block';
+            document.getElementById('dadosEmpresa').innerHTML = `
+                <strong>${pessoaJuridicaSelecionada.razaoSocial}</strong>
+                ${pessoaJuridicaSelecionada.nomeFantasia ? ` (${pessoaJuridicaSelecionada.nomeFantasia})` : ''} - 
+                CNPJ: ${pessoaJuridicaSelecionada.cnpj} - 
+                ID: ${pessoaJuridicaSelecionada.id}
+            `;
+            
+            // Scroll suave para o formulário
+            document.getElementById('formularioFornecedor').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function visualizarFornecedor() {
+            alert('Funcionalidade de visualização será implementada.');
+        }
+
+        function atualizarFornecedor() {
+            vincularFornecedor();
+        }
+
+        function cancelarCadastro() {
+            document.getElementById('formularioFornecedor').style.display = 'none';
+            document.getElementById('formFornecedor').reset();
+            document.getElementById('messages').innerHTML = '';
+            pessoaJuridicaSelecionada = null;
+        }
+
+        // Validação do formulário
+        document.getElementById('formFornecedor').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (!pessoaJuridicaSelecionada) {
+                showMessage('Erro: Nenhuma pessoa jurídica selecionada.', 'error');
+                return;
+            }
+
+            // Gerar código de fornecedor
+            const codigo = 'FORN' + Math.floor(Math.random() * 100000).toString().padStart(6, '0');
+            
+            showMessage(`Fornecedor cadastrado com sucesso! Código: ${codigo}`, 'success');
+            
+            // Limpar após 3 segundos
+            setTimeout(() => {
+                cancelarCadastro();
+                document.getElementById('resultadoBusca').innerHTML = '';
+                document.getElementById('cnpjBusca').value = '';
+            }, 3000);
+        });
+
+        function showMessage(message, type) {
+            const messagesDiv = document.getElementById('messages');
+            const className = type === 'success' ? 'success-message' : 'error-message';
+            messagesDiv.innerHTML = `<div class="${className}">${message}</div>`;
+            messagesDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

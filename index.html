@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestão Universitária</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🎓 Sistema de Gestão Universitária</h1>
+            <div class="user-info">
+                <span>Administrador</span>
+                <button class="btn-secondary">Sair</button>
+            </div>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="container">
+            <a href="index.html" class="active">Dashboard</a>
+            <a href="pessoa-fisica.html">Pessoa Física</a>
+            <a href="pessoa-juridica.html">Pessoa Jurídica</a>
+            <a href="professor.html">Professor</a>
+            <a href="fornecedor.html">Fornecedor</a>
+            <a href="aluno.html">Aluno</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="dashboard">
+            <h2>Bem-vindo ao Sistema de Gestão</h2>
+            <p class="subtitle">Selecione uma das opções abaixo para realizar um cadastro</p>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon">👤</div>
+                    <h3>Pessoa Física</h3>
+                    <p>Cadastrar nova pessoa física no sistema</p>
+                    <a href="pessoa-fisica.html" class="btn-primary">Cadastrar</a>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🏢</div>
+                    <h3>Pessoa Jurídica</h3>
+                    <p>Cadastrar nova empresa ou organização</p>
+                    <a href="pessoa-juridica.html" class="btn-primary">Cadastrar</a>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">👨‍🏫</div>
+                    <h3>Professor</h3>
+                    <p>Vincular professor a uma pessoa física</p>
+                    <a href="professor.html" class="btn-primary">Cadastrar</a>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🤝</div>
+                    <h3>Fornecedor</h3>
+                    <p>Cadastrar fornecedor vinculado a PJ</p>
+                    <a href="fornecedor.html" class="btn-primary">Cadastrar</a>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🎓</div>
+                    <h3>Aluno</h3>
+                    <p>Vincular aluno a uma pessoa física</p>
+                    <a href="aluno.html" class="btn-primary">Cadastrar</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats">
+            <h3>Estatísticas do Sistema</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">1.234</div>
+                    <div class="stat-label">Pessoas Físicas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">456</div>
+                    <div class="stat-label">Pessoas Jurídicas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">89</div>
+                    <div class="stat-label">Professores</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">34</div>
+                    <div class="stat-label">Fornecedores</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">3.567</div>
+                    <div class="stat-label">Alunos</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Sistema de Gestão Universitária - Grupo 48 | Senac Projeto Integrador</p>
+        </div>
+    </footer>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

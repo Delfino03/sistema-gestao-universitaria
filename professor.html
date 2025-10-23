@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Professor - Sistema de Gestão Universitária</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🎓 Sistema de Gestão Universitária</h1>
+            <div class="user-info">
+                <span>Administrador</span>
+                <button class="btn-secondary">Sair</button>
+            </div>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="container">
+            <a href="index.html">Dashboard</a>
+            <a href="pessoa-fisica.html">Pessoa Física</a>
+            <a href="pessoa-juridica.html">Pessoa Jurídica</a>
+            <a href="professor.html" class="active">Professor</a>
+            <a href="fornecedor.html">Fornecedor</a>
+            <a href="aluno.html">Aluno</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Seção de Busca -->
+        <div class="search-section">
+            <h2>Buscar Pessoa Física</h2>
+            <p class="description">Primeiro, localize a pessoa física que será vinculada como professor.</p>
+
+            <div class="search-box">
+                <div class="form-group">
+                    <label for="cpfBusca">CPF ou ID da Pessoa Física</label>
+                    <input 
+                        type="text" 
+                        id="cpfBusca" 
+                        placeholder="Digite o CPF ou ID"
+                    >
+                </div>
+                <button type="button" class="btn-primary" onclick="buscarPessoa()">Buscar</button>
+            </div>
+
+            <div id="resultadoBusca"></div>
+        </div>
+
+        <!-- Formulário de Professor (inicialmente oculto) -->
+        <div id="formularioProfessor" class="form-section" style="display: none;">
+            <h2>Dados do Professor</h2>
+            <p class="description">Preencha as informações complementares para o cadastro do professor.</p>
+
+            <div id="messages"></div>
+
+            <!-- Dados da Pessoa Física (somente leitura) -->
+            <div class="info-box">
+                <strong>Pessoa Física Selecionada:</strong>
+                <p id="dadosPessoa" style="margin-top: 0.5rem;"></p>
+            </div>
+
+            <form id="formProfessor">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="departamento" class="required">Departamento</label>
+                        <select id="departamento" name="departamento" required>
+                            <option value="">Selecione o departamento</option>
+                            <option value="Ciências Exatas">Ciências Exatas</option>
+                            <option value="Ciências Humanas">Ciências Humanas</option>
+                            <option value="Ciências Biológicas">Ciências Biológicas</option>
+                            <option value="Engenharias">Engenharias</option>
+                            <option value="Tecnologia">Tecnologia</option>
+                            <option value="Administração">Administração</option>
+                            <option value="Direito">Direito</option>
+                            <option value="Saúde">Saúde</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="titulacao" class="required">Titulação</label>
+                        <select id="titulacao" name="titulacao" required>
+                            <option value="">Selecione a titulação</option>
+                            <option value="Graduação">Graduação</option>
+                            <option value="Especialização">Especialização</option>
+                            <option value="Mestrado">Mestrado</option>
+                            <option value="Doutorado">Doutorado</option>
+                            <option value="Pós-Doutorado">Pós-Doutorado</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="regimeTrabalho" class="required">Regime de Trabalho</label>
+                        <select id="regimeTrabalho" name="regimeTrabalho" required>
+                            <option value="">Selecione o regime</option>
+                            <option value="20h">20 horas semanais</option>
+                            <option value="40h">40 horas semanais</option>
+                            <option value="DE">Dedicação Exclusiva</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dataAdmissao" class="required">Data de Admissão</label>
+                        <input 
+                            type="date" 
+                            id="dataAdmissao" 
+                            name="dataAdmissao"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="cancelarCadastro()">Cancelar</button>
+                    <button type="submit" class="btn-primary">Cadastrar Professor</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Sistema de Gestão Universitária - Grupo 48 | Senac Projeto Integrador</p>
+        </div>
+    </footer>
+
+    <script src="scripts.js"></script>
+    <script>
+        let pessoaFisicaSelecionada = null;
+
+        function buscarPessoa() {
+            const cpfBusca = document.getElementById('cpfBusca').value.trim();
+            const resultadoDiv = document.getElementById('resultadoBusca');
+
+            if (!cpfBusca) {
+                resultadoDiv.innerHTML = '<div class="error-message">Por favor, digite um CPF ou ID para buscar.</div>';
+                return;
+            }
+
+            // Simular busca (80% de chance de encontrar)
+            if (Math.random() < 0.8) {
+                pessoaFisicaSelecionada = {
+                    id: 'PF' + Math.floor(Math.random() * 10000).toString().padStart(5, '0'),
+                    nome: 'João da Silva Santos',
+                    cpf: '123.456.789-00',
+                    email: 'joao.silva@email.com',
+                    telefone: '(81) 98765-4321'
+                };
+
+                resultadoDiv.innerHTML = `
+                    <div class="result-card">
+                        <h4>✅ Pessoa Física Encontrada</h4>
+                        <p><strong>ID:</strong> ${pessoaFisicaSelecionada.id}</p>
+                        <p><strong>Nome:</strong> ${pessoaFisicaSelecionada.nome}</p>
+                        <p><strong>CPF:</strong> ${pessoaFisicaSelecionada.cpf}</p>
+                        <p><strong>E-mail:</strong> ${pessoaFisicaSelecionada.email}</p>
+                        <p><strong>Telefone:</strong> ${pessoaFisicaSelecionada.telefone}</p>
+                        <button class="btn-success" style="margin-top: 1rem;" onclick="vincularProfessor()">
+                            Vincular como Professor
+                        </button>
+                    </div>
+                `;
+            } else {
+                resultadoDiv.innerHTML = `
+                    <div class="error-message">
+                        Pessoa física não encontrada. 
+                        <a href="pessoa-fisica.html" style="color: inherit; text-decoration: underline;">
+                            Clique aqui para cadastrar
+                        </a>
+                    </div>
+                `;
+            }
+        }
+
+        function vincularProfessor() {
+            // Verificar se já é professor (20% de chance)
+            if (Math.random() < 0.2) {
+                const resultadoDiv = document.getElementById('resultadoBusca');
+                resultadoDiv.innerHTML = `
+                    <div class="error-message">
+                        Esta pessoa física já possui vínculo de professor.
+                        <div style="margin-top: 1rem;">
+                            <button class="btn-secondary" onclick="visualizarProfessor()">Visualizar</button>
+                            <button class="btn-primary" onclick="atualizarProfessor()">Atualizar Dados</button>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Mostrar formulário
+            document.getElementById('formularioProfessor').style.display = 'block';
+            document.getElementById('dadosPessoa').innerHTML = `
+                <strong>${pessoaFisicaSelecionada.nome}</strong> - 
+                CPF: ${pessoaFisicaSelecionada.cpf} - 
+                ID: ${pessoaFisicaSelecionada.id}
+            `;
+            
+            // Scroll suave para o formulário
+            document.getElementById('formularioProfessor').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function visualizarProfessor() {
+            alert('Funcionalidade de visualização será implementada.');
+        }
+
+        function atualizarProfessor() {
+            vincularProfessor();
+        }
+
+        function cancelarCadastro() {
+            document.getElementById('formularioProfessor').style.display = 'none';
+            document.getElementById('formProfessor').reset();
+            document.getElementById('messages').innerHTML = '';
+            pessoaFisicaSelecionada = null;
+        }
+
+        // Validação do formulário
+        document.getElementById('formProfessor').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (!pessoaFisicaSelecionada) {
+                showMessage('Erro: Nenhuma pessoa física selecionada.', 'error');
+                return;
+            }
+
+            // Gerar matrícula funcional
+            const matricula = 'PROF' + Math.floor(Math.random() * 100000).toString().padStart(6, '0');
+            
+            showMessage(`Professor cadastrado com sucesso! Matrícula: ${matricula}`, 'success');
+            
+            // Limpar após 3 segundos
+            setTimeout(() => {
+                cancelarCadastro();
+                document.getElementById('resultadoBusca').innerHTML = '';
+                document.getElementById('cpfBusca').value = '';
+            }, 3000);
+        });
+
+        function showMessage(message, type) {
+            const messagesDiv = document.getElementById('messages');
+            const className = type === 'success' ? 'success-message' : 'error-message';
+            messagesDiv.innerHTML = `<div class="${className}">${message}</div>`;
+            messagesDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

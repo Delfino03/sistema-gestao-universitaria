@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Pessoa Física - Sistema de Gestão Universitária</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🎓 Sistema de Gestão Universitária</h1>
+            <div class="user-info">
+                <span>Administrador</span>
+                <button class="btn-secondary">Sair</button>
+            </div>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="container">
+            <a href="index.html">Dashboard</a>
+            <a href="pessoa-fisica.html" class="active">Pessoa Física</a>
+            <a href="pessoa-juridica.html">Pessoa Jurídica</a>
+            <a href="professor.html">Professor</a>
+            <a href="fornecedor.html">Fornecedor</a>
+            <a href="aluno.html">Aluno</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="form-section">
+            <h2>Cadastrar Pessoa Física</h2>
+            <p class="description">Preencha os dados abaixo para registrar uma nova pessoa física no sistema.</p>
+
+            <div id="messages"></div>
+
+            <form id="formPessoaFisica">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nome" class="required">Nome Completo</label>
+                        <input 
+                            type="text" 
+                            id="nome" 
+                            name="nome" 
+                            placeholder="Digite o nome completo"
+                            required
+                            minlength="3"
+                        >
+                        <small>Informe o nome completo da pessoa</small>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="cpf" class="required">CPF</label>
+                        <input 
+                            type="text" 
+                            id="cpf" 
+                            name="cpf" 
+                            placeholder="000.000.000-00"
+                            maxlength="14"
+                            required
+                        >
+                        <small>Formato: 000.000.000-00</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dataNascimento" class="required">Data de Nascimento</label>
+                        <input 
+                            type="date" 
+                            id="dataNascimento" 
+                            name="dataNascimento"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email" class="required">E-mail</label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            placeholder="exemplo@email.com"
+                            required
+                        >
+                        <small>Endereço de e-mail válido</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefone" class="required">Telefone</label>
+                        <input 
+                            type="tel" 
+                            id="telefone" 
+                            name="telefone" 
+                            placeholder="(00) 00000-0000"
+                            maxlength="15"
+                            required
+                        >
+                        <small>Formato: (00) 00000-0000</small>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a href="index.html" class="btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn-primary">Cadastrar Pessoa Física</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="info-box">
+            <strong>ℹ️ Informações importantes:</strong>
+            <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                <li>Todos os campos marcados com * são obrigatórios</li>
+                <li>O CPF será validado automaticamente</li>
+                <li>Não é possível cadastrar o mesmo CPF duas vezes</li>
+                <li>Um ID único será gerado após o cadastro bem-sucedido</li>
+            </ul>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Sistema de Gestão Universitária - Grupo 48 | Senac Projeto Integrador</p>
+        </div>
+    </footer>
+
+    <script src="scripts.js"></script>
+    <script>
+        // Máscara para CPF
+        document.getElementById('cpf').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length <= 11) {
+                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+                e.target.value = value;
+            }
+        });
+
+        // Máscara para Telefone
+        document.getElementById('telefone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length <= 11) {
+                value = value.replace(/(\d{2})(\d)/, '($1) $2');
+                value = value.replace(/(\d{5})(\d)/, '$1-$2');
+                e.target.value = value;
+            }
+        });
+
+        // Validação do formulário
+        document.getElementById('formPessoaFisica').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const cpf = document.getElementById('cpf').value.replace(/\D/g, '');
+            
+            // Validação simples de CPF
+            if (cpf.length !== 11) {
+                showMessage('CPF inválido. Digite um CPF com 11 dígitos.', 'error');
+                return;
+            }
+
+            // Simular verificação de CPF duplicado (25% de chance)
+            if (Math.random() < 0.25) {
+                showMessage('CPF já cadastrado no sistema. Deseja visualizar o cadastro existente?', 'error');
+                return;
+            }
+
+            // Simular sucesso
+            const id = 'PF' + Math.floor(Math.random() * 10000).toString().padStart(5, '0');
+            showMessage(`Pessoa física cadastrada com sucesso! ID: ${id}`, 'success');
+            
+            // Limpar formulário após 2 segundos
+            setTimeout(() => {
+                document.getElementById('formPessoaFisica').reset();
+                document.getElementById('messages').innerHTML = '';
+            }, 3000);
+        });
+
+        function showMessage(message, type) {
+            const messagesDiv = document.getElementById('messages');
+            const className = type === 'success' ? 'success-message' : 'error-message';
+            messagesDiv.innerHTML = `<div class="${className}">${message}</div>`;
+            messagesDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
